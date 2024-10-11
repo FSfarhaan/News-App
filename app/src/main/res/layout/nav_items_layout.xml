@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginRight="30sp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/navItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="General"
+        android:textColor="#706F6F"
+        android:textSize="17sp"
+        android:textStyle="bold"/>
+
+    <View
+        android:id="@+id/navUnderline"
+        android:layout_width="50sp"
+        android:layout_height="4sp"
+        android:layout_marginTop="5sp"
+        android:background="@color/themeColor"
+        android:visibility="invisible"/>
+
+</LinearLayout>

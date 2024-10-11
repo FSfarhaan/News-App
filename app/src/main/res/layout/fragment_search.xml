@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="8dp"
+        app:cardMaxElevation="20dp"
+        app:cardCornerRadius="100dp"
+        app:cardBackgroundColor="@color/white">
+
+
+        <EditText
+            android:id="@+id/searchNews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:paddingVertical="15sp"
+            android:paddingHorizontal="25sp"
+            android:hint="Search news by words"
+            android:textColorHint="#484848"
+            android:textColor="@color/black"
+            android:drawableLeft="@drawable/search_icon"
+            android:drawablePadding="10sp"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/showResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text=" Showing 10 articles related to:\n &quot;Donald Trump&quot;"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/watchLaterRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10sp"/>
+
+
+</LinearLayout>
