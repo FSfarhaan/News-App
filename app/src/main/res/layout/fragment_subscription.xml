@@ -12,7 +12,7 @@
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_marginVertical="20sp"/>
+        android:layout_marginVertical="10sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/watchLater"

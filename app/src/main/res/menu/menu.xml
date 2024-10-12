@@ -9,6 +9,10 @@
         android:icon="@drawable/search_icon"
         android:title="Search" />
     <item
+        android:id="@+id/menu_audio"
+        android:icon="@drawable/microphone"
+        android:title="Audio News" />
+    <item
         android:id="@+id/menu_subscription"
         android:icon="@drawable/liked"
         android:title="Favourites" />

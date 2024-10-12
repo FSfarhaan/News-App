@@ -1,5 +1,6 @@
 package com.example.news.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +19,10 @@ import com.example.news.MainActivity;
 import com.example.news.NewsDetailActivity;
 import com.example.news.NewsModel;
 import com.example.news.R;
+import com.example.news.fragments.FavouritesFragment;
+import com.example.news.fragments.PersonalFragment;
+import com.example.news.utils.DbHelper;
+
 import java.util.ArrayList;
 import java.time.Duration;
 import java.time.Instant;
@@ -25,10 +31,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     ArrayList<NewsModel.Articles> arrayList;
     Context context;
+    String fragment;
+    DbHelper db;
 
-    public NewsAdapter(ArrayList<NewsModel.Articles> arrayList, Context context) {
+    public NewsAdapter(ArrayList<NewsModel.Articles> arrayList, Context context, String fragment) {
         this.arrayList = arrayList;
         this.context = context;
+        this.fragment = fragment;
+        db = new DbHelper(context);
     }
 
 
@@ -67,6 +77,31 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 }
             }
         });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(fragment.equals("Fav")) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(context)
+                            .setTitle("Remove from favourites")
+                            .setMessage("Are you sure about this?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", (dialogInterface, i) -> {
+                                db.deleteLikedNews(articles.getUrl());
+                                arrayList.remove(arrayList.get(position));
+                                notifyItemRemoved(holder.getAdapterPosition());
+                                notifyItemRangeChanged(position, arrayList.size());
+                            })
+                            .setNegativeButton("No", (dialogInterface, i) -> {
+
+                            });
+                    dialog.show();
+                }
+                return true;
+            }
+        });
+
+
     }
 
     @Override

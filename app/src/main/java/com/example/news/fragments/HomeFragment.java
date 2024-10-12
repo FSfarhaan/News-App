@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +25,7 @@ import com.example.news.NewsModel;
 import com.example.news.R;
 import com.example.news.adapters.NavbarAdapter;
 import com.example.news.adapters.NewsAdapter;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -45,7 +47,10 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
     ArrayList<NewsModel.Articles> newsArrayList = new ArrayList<>();
 
     ImageView imgOfNews1;
+    CardView imgNews1;
     TextView titleOfNews1, nameOfNews1, timeAgoOfNews1, newsStatus;
+
+    ShimmerFrameLayout shimmerFrameLayout, shimmerNews1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -57,11 +62,17 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        //The Cardview
+        imgNews1 = view.findViewById(R.id.imgNews1);
+
         imgOfNews1 = view.findViewById(R.id.imgOfNews1);
         titleOfNews1 = view.findViewById(R.id.titleOfNews1);
         nameOfNews1 = view.findViewById(R.id.nameOfNews1);
         timeAgoOfNews1 = view.findViewById(R.id.timeAgoOfNews1);
         newsStatus = view.findViewById(R.id.newsStatus);
+
+        shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
+        shimmerNews1 = view.findViewById(R.id.shimmerNews1);
 
         navArrayList.clear();
         Collections.addAll(navArrayList, "General", "Entertainment", "Business", "Sports", "Health", "Technology");
@@ -71,10 +82,12 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
         navRV.setAdapter(navAdapter);
         navAdapter.setOnCategoryClickListener(this);
 
+        shimmerFrameLayout.startShimmer();
+        shimmerNews1.startShimmer();
         getNews("general");
 
         newsRV = view.findViewById(R.id.newsRV);
-        newsAdapter = new NewsAdapter(newsArrayList, getContext());
+        newsAdapter = new NewsAdapter(newsArrayList, getContext(), "Home");
         newsRV.setLayoutManager(new LinearLayoutManager(getContext()));
         newsRV.setAdapter(newsAdapter);
 
@@ -105,21 +118,45 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
                     List<NewsModel.Articles> allArticles = response.body().getArticles();
 
                     if (!allArticles.isEmpty()) {
+                        shimmerFrameLayout.stopShimmer();
+                        shimmerFrameLayout.setVisibility(View.GONE);
+                        shimmerNews1.stopShimmer();
+                        shimmerNews1.setVisibility(View.GONE);
+                        newsRV.setVisibility(View.VISIBLE);
+                        imgNews1.setVisibility(View.VISIBLE);
                         NewsModel.Articles firstArticle = allArticles.get(0);
                         updateUIWithFirstArticle(firstArticle);
 
                         newsArrayList.addAll(allArticles.subList(1, allArticles.size()));
                         newsAdapter.notifyDataSetChanged();
                     } else {
+                        shimmerFrameLayout.stopShimmer();
+                        shimmerFrameLayout.setVisibility(View.GONE);
+                        shimmerNews1.stopShimmer();
+                        shimmerNews1.setVisibility(View.GONE);
+                        newsRV.setVisibility(View.VISIBLE);
+                        imgNews1.setVisibility(View.VISIBLE);
                         Toast.makeText(getContext(), "No articles found for the selected category.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    shimmerFrameLayout.stopShimmer();
+                    shimmerFrameLayout.setVisibility(View.GONE);
+                    shimmerNews1.stopShimmer();
+                    shimmerNews1.setVisibility(View.GONE);
+                    newsRV.setVisibility(View.VISIBLE);
+                    imgNews1.setVisibility(View.VISIBLE);
                     Toast.makeText(getContext(), "Sorry, can't fetch news.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<NewsModel> call, Throwable t) {
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                shimmerNews1.stopShimmer();
+                shimmerNews1.setVisibility(View.GONE);
+                newsRV.setVisibility(View.VISIBLE);
+                imgNews1.setVisibility(View.VISIBLE);
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -159,11 +196,18 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
 
     @Override
     public void onCategoryClicked(String category) {
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmer();
+        shimmerNews1.setVisibility(View.VISIBLE);
+        shimmerNews1.startShimmer();
+        imgNews1.setVisibility(View.GONE);
+        newsRV.setVisibility(View.GONE);
         getNews(category);
     }
 
     public static String timeDifference(String dateTimeString) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
             Instant inputTime = Instant.parse(dateTimeString);
             Instant currentTime = Instant.now();
             Duration duration = Duration.between(inputTime, currentTime);
