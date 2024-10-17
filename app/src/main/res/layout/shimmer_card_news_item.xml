@@ -1,0 +1,52 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="215sp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="20sp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Placeholder for Background Image -->
+
+
+        <!-- Black Overlay -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000" /> <!-- 50% opaque black -->
+
+        <!-- Shimmer Text Overlays -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20sp">
+
+            <!-- Placeholder for News Title -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_above="@id/detailsRelativeLayout"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10sp"
+                android:background="#E0E0E0"/>
+
+            <!-- Placeholder for Name and Time Ago -->
+            <RelativeLayout
+                android:id="@+id/detailsRelativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <!-- Placeholder for Name of News -->
+                <View
+                    android:layout_width="120dp"
+                    android:layout_height="20dp"
+                    android:background="#E0E0E0"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </FrameLayout>
+</androidx.cardview.widget.CardView>

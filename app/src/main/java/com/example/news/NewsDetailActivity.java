@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsetsController;
 import android.widget.Button;
@@ -16,6 +18,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.news.utils.DbHelper;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.util.List;
 
 public class NewsDetailActivity extends AppCompatActivity {
@@ -74,6 +82,7 @@ public class NewsDetailActivity extends AppCompatActivity {
                 Uri webpage = Uri.parse(urlToWeb);
                 Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
                 startActivity(intent);
+                new WebScraperTask().execute(urlToWeb);
             }
         });
 
@@ -110,5 +119,43 @@ public class NewsDetailActivity extends AppCompatActivity {
         super.onBackPressed();
         startActivity(new Intent(NewsDetailActivity.this, MainActivity.class));
         finish();
+    }
+
+    private class WebScraperTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                // Fetch the webpage
+                Document document = Jsoup.connect(urls[0]).get();
+
+                // Extract the headline (e.g., the <h1> tag or a specific class for headlines)
+                Element headline = document.selectFirst("h1");
+
+                // Extract the article body (e.g., paragraphs inside a specific class)
+                Elements paragraphs = document.select("div#mainArea p");
+
+                // Build the article content string
+                StringBuilder articleContent = new StringBuilder();
+                if (headline != null) {
+                    articleContent.append("Headline: ").append(headline.text()).append("\n\n");
+                }
+
+                for (Element paragraph : paragraphs) {
+                    articleContent.append(paragraph.text()).append("\n\n");
+                }
+
+                return articleContent.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Error fetching page";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // Update the UI with the scraped data
+            Log.d("News laake de re", result);
+        }
     }
 }

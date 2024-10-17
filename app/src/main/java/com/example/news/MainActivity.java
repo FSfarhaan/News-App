@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowInsetsController;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.news.adapters.ViewPagerAdapter;
+import com.example.news.fragments.AudioFragment;
 import com.example.news.fragments.HomeFragment;
 import com.example.news.fragments.PersonalFragment;
 import com.example.news.fragments.SearchFragment;
-import com.example.news.fragments.NotificationsFragment;
+import com.example.news.fragments.FavouritesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,8 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
     private HomeFragment homeFragment;
     private SearchFragment searchFragment;
-    private NotificationsFragment notificationsFragment;
+    private FavouritesFragment favouritesFragment;
     private PersonalFragment personalFragment;
+    private AudioFragment audioFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         // Initialize fragments
         homeFragment = new HomeFragment();
         searchFragment = new SearchFragment();
-        notificationsFragment = new NotificationsFragment();
+        audioFragment = new AudioFragment();
+        favouritesFragment = new FavouritesFragment();
         personalFragment = new PersonalFragment();
 
         viewPager = findViewById(R.id.viewPager);
@@ -66,12 +68,16 @@ public class MainActivity extends AppCompatActivity {
                         viewPager.setCurrentItem(1);
                         return true;
                     }
-                    else if(itemId == R.id.menu_subscription){
+                    else if(itemId == R.id.menu_audio){
                         viewPager.setCurrentItem(2);
                         return true;
                     }
-                    else if(itemId == R.id.menu_personal){
+                    else if(itemId == R.id.menu_subscription){
                         viewPager.setCurrentItem(3);
+                        return true;
+                    }
+                    else if(itemId == R.id.menu_personal){
+                        viewPager.setCurrentItem(4);
                         return true;
                     }
                     else return false;
@@ -96,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), ViewPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(homeFragment);
         adapter.addFragment(searchFragment);
-        adapter.addFragment(notificationsFragment);
+        adapter.addFragment(audioFragment);
+        adapter.addFragment(favouritesFragment);
         adapter.addFragment(personalFragment);
         viewPager.setAdapter(adapter);
     }

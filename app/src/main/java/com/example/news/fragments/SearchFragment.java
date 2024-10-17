@@ -51,7 +51,7 @@ public class SearchFragment extends Fragment {
         searchNews = view.findViewById(R.id.searchNews);
         watchLaterRV = view.findViewById(R.id.watchLaterRV);
         showResults = view.findViewById(R.id.showResults);
-        newsAdapter = new NewsAdapter(newsArrayList, getContext());
+        newsAdapter = new NewsAdapter(newsArrayList, getContext(), "Search");
         watchLaterRV.setLayoutManager(new LinearLayoutManager(getContext()));
         watchLaterRV.setAdapter(newsAdapter);
 

@@ -19,13 +19,13 @@ import com.example.news.utils.DbHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsFragment extends Fragment {
+public class FavouritesFragment extends Fragment {
     RecyclerView watchLaterRV;
     NewsAdapter newsAdapter;
     ArrayList<NewsModel.Articles> newsArrayList = new ArrayList<>();
     DbHelper db;
 
-    public NotificationsFragment() {
+    public FavouritesFragment() {
         // Required empty public constructor
     }
 
@@ -39,7 +39,7 @@ public class NotificationsFragment extends Fragment {
         db = new DbHelper(getContext());
 
         watchLaterRV = view.findViewById(R.id.watchLater);
-        newsAdapter = new NewsAdapter(newsArrayList, getContext());
+        newsAdapter = new NewsAdapter(newsArrayList, getContext(), "Fav");
         watchLaterRV.setLayoutManager(new LinearLayoutManager(getContext()));
         watchLaterRV.setAdapter(newsAdapter);
 
