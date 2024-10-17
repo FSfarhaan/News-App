@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
 
     public void getNews(String category) {
         // String sources = "the-times-of-india,hindustan-times,india-today,the-hindu,ndtv-news,the-indian-express";
-        String API_KEY = "178913a53262a17bb0e2f7172d7b3f87";
+        String API_KEY = "YOUR_API_KEY";
         String BASE_URL = "https://gnews.io/api/v4/";
         String country = "in";
 
