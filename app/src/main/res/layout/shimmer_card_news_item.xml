@@ -15,7 +15,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#80000000" /> <!-- 50% opaque black -->
+            android:background="#99974EE8" /> <!-- 50% opaque black -->
 
         <!-- Shimmer Text Overlays -->
         <RelativeLayout

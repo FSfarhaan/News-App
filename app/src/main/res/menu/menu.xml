@@ -14,8 +14,8 @@
         android:title="Audio News" />
     <item
         android:id="@+id/menu_subscription"
-        android:icon="@drawable/liked"
-        android:title="Favourites" />
+        android:icon="@drawable/watch_later_icon"
+        android:title="Watch Later" />
     <item
         android:id="@+id/menu_personal"
         android:icon="@drawable/profile_icon"

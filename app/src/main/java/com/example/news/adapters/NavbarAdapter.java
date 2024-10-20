@@ -39,7 +39,7 @@ public class NavbarAdapter extends RecyclerView.Adapter<NavbarAdapter.NavbarView
 
         // Set default or selected state
         if (selectedPosition == position) {
-            holder.navItem.setTextColor(context.getResources().getColor(R.color.themeColor));
+            holder.navItem.setTextColor(context.getResources().getColor(R.color.themeColor2));
             holder.navUnderline.setVisibility(View.VISIBLE);
         } else {
             holder.navItem.setTextColor(context.getResources().getColor(R.color.navColor));

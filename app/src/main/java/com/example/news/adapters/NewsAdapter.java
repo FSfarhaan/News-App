@@ -2,26 +2,21 @@ package com.example.news.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.news.MainActivity;
-import com.example.news.NewsDetailActivity;
 import com.example.news.NewsModel;
 import com.example.news.R;
-import com.example.news.fragments.FavouritesFragment;
-import com.example.news.fragments.PersonalFragment;
 import com.example.news.utils.DbHelper;
+import com.example.news.utils.NewsDetailBottomSheet;
 
 import java.util.ArrayList;
 import java.time.Duration;
@@ -33,14 +28,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     Context context;
     String fragment;
     DbHelper db;
+    OverlayVisibilityListener listener;
 
-    public NewsAdapter(ArrayList<NewsModel.Articles> arrayList, Context context, String fragment) {
+    public NewsAdapter(ArrayList<NewsModel.Articles> arrayList, Context context, String fragment, OverlayVisibilityListener listener) {
         this.arrayList = arrayList;
         this.context = context;
         this.fragment = fragment;
+        this.listener = listener;
         db = new DbHelper(context);
     }
 
+    public interface OverlayVisibilityListener {
+        void showOverlay();
+        void hideOverlay();
+    }
 
     @NonNull
     @Override
@@ -59,35 +60,43 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         Glide.with(holder.itemView.getContext()).load(articles.getUrlToImage()).placeholder(R.drawable.news_placeholder_img).into(holder.newsImg);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, NewsDetailActivity.class);
-                if(articles.getUrlToImage() != null) intent.putExtra("newsImgUrl", articles.getUrlToImage());
-                else intent.putExtra("newsImgUrl", "https://cdn.pixabay.com/photo/2015/02/15/09/33/news-636978_1280.jpg");
-                intent.putExtra("newsSource", articles.getSource().getName());
-                intent.putExtra("newsTitle", articles.getTitle());
-                intent.putExtra("newsTimeAgo", timeDifference(articles.getPublishedAt()));
-                intent.putExtra("newsUrlToWeb", articles.getUrl());
-                intent.putExtra("newsContent", articles.getContent());
-
-                context.startActivity(intent);
-                if(context instanceof MainActivity) {
-                    ((MainActivity) context).finish();
-                }
+        holder.itemView.setOnClickListener(v -> {
+            NewsDetailBottomSheet bottomSheet = new NewsDetailBottomSheet();
+            if (articles.getUrlToImage() != null) {
+                bottomSheet.setNewsData(
+                        articles.getUrlToImage(),
+                        articles.getSource().getName(),
+                        articles.getTitle(),
+                        timeDifference(articles.getPublishedAt()),
+                        articles.getUrl(),
+                        articles.getContent()
+                );
+            } else {
+                bottomSheet.setNewsData(
+                        "https://cdn.pixabay.com/photo/2015/02/15/09/33/news-636978_1280.jpg",
+                        articles.getSource().getName(),
+                        articles.getTitle(),
+                        timeDifference(articles.getPublishedAt()),
+                        articles.getUrl(),
+                        articles.getContent()
+                );
             }
+            bottomSheet.setOverlayVisibilityListener(listener);
+
+            bottomSheet.show(((AppCompatActivity) context).getSupportFragmentManager(), "newsDetailBottomSheet");
+            listener.showOverlay();
         });
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(fragment.equals("Fav")) {
+                if(fragment.equals("watchLater")) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(context)
-                            .setTitle("Remove from favourites")
+                            .setTitle("Remove from watch later")
                             .setMessage("Are you sure about this?")
                             .setCancelable(false)
                             .setPositiveButton("Yes", (dialogInterface, i) -> {
-                                db.deleteLikedNews(articles.getUrl());
+                                db.deleteSavedNews(articles.getUrl());
                                 arrayList.remove(arrayList.get(position));
                                 notifyItemRemoved(holder.getAdapterPosition());
                                 notifyItemRangeChanged(position, arrayList.size());

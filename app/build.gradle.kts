@@ -12,7 +12,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -43,4 +42,9 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     implementation("org.jsoup:jsoup:1.15.4")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
+    implementation("androidx.work:work-runtime:2.9.1")
+   implementation ("com.google.android.material:material:1.12.0")
+
+
+
 }

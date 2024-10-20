@@ -11,10 +11,7 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/divider"
-        android:paddingRight="20sp"
-        android:paddingLeft="20sp"
-        android:paddingTop="20sp"/>
+        android:layout_above="@id/divider" />
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -33,5 +30,4 @@
         app:itemActiveIndicatorStyle="@color/white"
         app:itemRippleColor="@color/white"
         app:menu="@menu/menu" />
-
 </RelativeLayout>

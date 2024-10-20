@@ -1,5 +1,6 @@
 package com.example.news.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.news.MainActivity;
 import com.example.news.NewsApi;
 import com.example.news.NewsModel;
 import com.example.news.R;
@@ -30,12 +32,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements NewsAdapter.OverlayVisibilityListener {
     RecyclerView watchLaterRV;
     NewsAdapter newsAdapter;
     ArrayList<NewsModel.Articles> newsArrayList = new ArrayList<>();
     EditText searchNews;
     TextView showResults;
+    View dimOverlay;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -51,7 +54,8 @@ public class SearchFragment extends Fragment {
         searchNews = view.findViewById(R.id.searchNews);
         watchLaterRV = view.findViewById(R.id.watchLaterRV);
         showResults = view.findViewById(R.id.showResults);
-        newsAdapter = new NewsAdapter(newsArrayList, getContext(), "Search");
+        dimOverlay = view.findViewById(R.id.dimOverlay);
+        newsAdapter = new NewsAdapter(newsArrayList, getContext(), "Search", this);
         watchLaterRV.setLayoutManager(new LinearLayoutManager(getContext()));
         watchLaterRV.setAdapter(newsAdapter);
 
@@ -72,7 +76,7 @@ public class SearchFragment extends Fragment {
 
     private void searchNewsByWords() {
         String keywords = searchNews.getText().toString();
-        String API_KEY = "YOUR_API_KEY";
+        String API_KEY = "5ee9f06f4f41ff9da51c2dd0e62d8077";
         String BASE_URL = "https://gnews.io/api/v4/";
         String country = "in";
 
@@ -107,8 +111,19 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onFailure(Call<NewsModel> call, Throwable t) {
-
             }
         });
+    }
+
+    @Override
+    public void showOverlay() {
+        dimOverlay.setVisibility(View.VISIBLE);
+        ((MainActivity) getActivity()).setStatusBarColor(Color.argb(128, 0, 0, 0));
+    }
+
+    @Override
+    public void hideOverlay() {
+        dimOverlay.setVisibility(View.GONE);
+        ((MainActivity) getActivity()).setStatusBarColor(Color.argb(255, 255, 255, 255));
     }
 }
