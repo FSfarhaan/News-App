@@ -36,7 +36,7 @@ public class WatchLaterFragment extends Fragment implements NewsAdapter.OverlayV
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_subscription, container, false);
+        View view = inflater.inflate(R.layout.fragment_watch_later, container, false);
         dimOverlay = view.findViewById(R.id.dimOverlay);
 
         // Initialize DbHelper here after the context is available

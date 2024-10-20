@@ -144,6 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
-        AlarmScheduler.scheduleRepeatingNotification(this, 1);
+        // AlarmScheduler.scheduleRepeatingNotification(this, 1);
     }
 }

@@ -15,7 +15,9 @@ public interface NewsApi {
     @GET("top-headlines")
     Call<NewsModel> getNewsByKeywords(
             @Query("apikey") String apiKey,
-            @Query("q") String keywords,
-            @Query("country") String country
+            @Query("q") String category,
+            @Query("lang") String language,
+            @Query("country") String country,
+            @Query("max") int max
     );
 }
