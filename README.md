@@ -65,8 +65,9 @@ The **News App** is an Android application built with Java and XML that allows u
 ## 📱 Screenshots
 
 <!-- Add screenshots of your app here. Example: -->
-![Home Screen](screenshots/home_screen.png)
-![Search Screen](screenshots/search_screen.png)
+![Image 1](screenshots/image1.jpg)
+![Image 2](screenshots/image2.jpg)
+![Image 3](screenshots/image3.jpg)
 
 ## 🤝 Contributing
 
