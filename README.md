@@ -8,7 +8,7 @@ The **News App** is an Android application built with Java and XML that allows u
 
 ## ✨ Features
 
-- 🌐 **Category-Wise News**: Fetch news based on categories like Entertainment, Sports, Politics, Technology, and more.
+- 🌐 **Category-Wise News**: Fetch news based on categories like Entertainment, Sports, Technology, and more.
 - 🔍 **Search News**: Search for news articles based on keywords.
 - ⏳ **Watch Later**: Mark articles to read or watch later.
 - 📜 **View Full Articles**: Click on any article to view full details with an option to open the original source.
