@@ -5,5 +5,5 @@
     <color name="themeColor">#279E9A</color>
     <color name="themeColor2">#974EE8</color>
     <color name="navColor">#706F6F</color>
-    <color name="overlay_color">#80000000</color> <!-- Semi-transparent black -->
+    <color name="overlay_color">#41000000</color> <!-- Semi-transparent black -->
 </resources>

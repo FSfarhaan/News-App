@@ -9,9 +9,8 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            // Reschedule the notification after reboot
-            AlarmScheduler.scheduleRepeatingNotification(context, 1);
+            // Reschedule the notifications after boot
+            AlarmScheduler.scheduleNotification(context);
         }
     }
 }
-

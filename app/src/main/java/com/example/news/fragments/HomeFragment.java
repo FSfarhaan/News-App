@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.example.news.NewsModel;
 import com.example.news.R;
 import com.example.news.adapters.NavbarAdapter;
 import com.example.news.adapters.NewsAdapter;
+import com.example.news.data.SharedPreferencesHelper;
 import com.example.news.utils.NewsDetailBottomSheet;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -50,9 +52,16 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
     CardView imgNews1;
     TextView titleOfNews1, nameOfNews1, timeAgoOfNews1, newsStatus;
 
+    String defaultLanguage, defaultCountry;
+    int defaultMaxNews;
+
     ShimmerFrameLayout shimmerFrameLayout, shimmerNews1;
 
+    LinearLayout mainLL, noNewsLL;
+
     View dimOverlay;
+
+    SharedPreferencesHelper helper;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -76,7 +85,14 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
         shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
         shimmerNews1 = view.findViewById(R.id.shimmerNews1);
 
+        mainLL = view.findViewById(R.id.mainLL);
+        noNewsLL = view.findViewById(R.id.noNewsLL);
+
         dimOverlay = view.findViewById(R.id.dimOverlay);
+
+        helper = new SharedPreferencesHelper(getContext());
+
+        checkForDefault();
 
         navArrayList.clear();
         Collections.addAll(navArrayList, "General", "Entertainment", "Business", "Sports", "Health", "Technology");
@@ -88,6 +104,7 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
 
         shimmerFrameLayout.startShimmer();
         shimmerNews1.startShimmer();
+
         getNews("general");
 
         newsRV = view.findViewById(R.id.newsRV);
@@ -102,7 +119,9 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
         // String sources = "the-times-of-india,hindustan-times,india-today,the-hindu,ndtv-news,the-indian-express";
         String API_KEY = "5ee9f06f4f41ff9da51c2dd0e62d8077";
         String BASE_URL = "https://gnews.io/api/v4/";
-        String country = "in";
+        String country = defaultCountry;
+        String language = defaultLanguage;
+        int maxNews = defaultMaxNews;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -111,7 +130,7 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
 
         newsArrayList.clear();
         NewsApi newsApi = retrofit.create(NewsApi.class);
-        Call<NewsModel> call = newsApi.getNewsByCategory(API_KEY, category, country);
+        Call<NewsModel> call = newsApi.getNewsByCategory(API_KEY, category, country, language, maxNews);
 
         Log.d("HomeFragment", "Request URL: " + call.request().url().toString());
 
@@ -131,7 +150,11 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
                         NewsModel.Articles firstArticle = allArticles.get(0);
                         updateUIWithFirstArticle(firstArticle);
 
+                        mainLL.setVisibility(View.VISIBLE);
+                        noNewsLL.setVisibility(View.GONE);
+
                         newsArrayList.addAll(allArticles.subList(1, allArticles.size()));
+
                         newsAdapter.notifyDataSetChanged();
                     } else {
                         shimmerFrameLayout.stopShimmer();
@@ -141,6 +164,9 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
                         newsRV.setVisibility(View.VISIBLE);
                         imgNews1.setVisibility(View.VISIBLE);
                         Toast.makeText(getContext(), "No articles found for the selected category.", Toast.LENGTH_SHORT).show();
+
+                        mainLL.setVisibility(View.GONE);
+                        noNewsLL.setVisibility(View.VISIBLE);
                     }
                 } else {
                     shimmerFrameLayout.stopShimmer();
@@ -150,6 +176,9 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
                     newsRV.setVisibility(View.VISIBLE);
                     imgNews1.setVisibility(View.VISIBLE);
                     Toast.makeText(getContext(), "Sorry, can't fetch news.", Toast.LENGTH_SHORT).show();
+
+                    mainLL.setVisibility(View.GONE);
+                    noNewsLL.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -161,6 +190,10 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
                 shimmerNews1.setVisibility(View.GONE);
                 newsRV.setVisibility(View.VISIBLE);
                 imgNews1.setVisibility(View.VISIBLE);
+
+                mainLL.setVisibility(View.GONE);
+                noNewsLL.setVisibility(View.VISIBLE);
+
                 Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -178,24 +211,6 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
         nameOfNews1.setText(name);
         timeAgoOfNews1.setText(time);
         Glide.with(getContext()).load(urlImage).placeholder(R.drawable.news_placeholder_img).into(imgOfNews1);
-
-//        imgOfNews1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), NewsDetailActivity.class);
-//                intent.putExtra("newsImgUrl", urlImage != null ? urlImage : "https://cdn.pixabay.com/photo/2015/02/15/09/33/news-636978_1280.jpg");
-//                intent.putExtra("newsSource", name);
-//                intent.putExtra("newsTitle", title);
-//                intent.putExtra("newsTimeAgo", time);
-//                intent.putExtra("newsUrlToWeb", urlToWeb);
-//                intent.putExtra("newsContent", content);
-//
-//                getContext().startActivity(intent);
-//                if (getContext() instanceof MainActivity) {
-//                    ((MainActivity) getContext()).finish();
-//                }
-//            }
-//        });
 
         imgOfNews1.setOnClickListener(v -> {
             NewsDetailBottomSheet bottomSheet = new NewsDetailBottomSheet();
@@ -243,6 +258,15 @@ public class HomeFragment extends Fragment implements NavbarAdapter.OnCategoryCl
             }
         }
         else return dateTimeString;
+    }
+
+    private void checkForDefault() {
+        // Fetching stored values for news-related preferences from SharedPreferences
+        defaultLanguage = helper.getLanguage();
+        defaultCountry = helper.getCountry();
+        defaultMaxNews = helper.getMaxNumbers();
+
+        Log.d("HomeFragment", "Language: " + defaultLanguage + ", Country: " + defaultCountry + ", MaxNews: " + defaultMaxNews);
     }
 
     @Override

@@ -1,12 +1,10 @@
-package com.example.news.utils;
+package com.example.news.data;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import androidx.annotation.Nullable;
 
 import com.example.news.NewsModel;
 
@@ -18,9 +16,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "NewsDB";
 
-    // Liked Videos Table
-    public static final String TABLE_LIKED_NEWS = "LikedNews";
-    // Saved Videos Table
+    // Saved News Table
     public static final String TABLE_SAVED_NEWS = "SavedNews";
 
     public static final String KEY_ID = "id";
@@ -37,18 +33,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create Liked Videos Table
-        db.execSQL("CREATE TABLE " + TABLE_LIKED_NEWS + " ("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + KEY_IMG_URL + " TEXT, "
-                + KEY_SOURCE + " TEXT, "
-                + KEY_TITLE + " TEXT, "
-                + KEY_TIME_AGO + " TEXT, "
-                + KEY_URL_TO_WEB + " TEXT UNIQUE, "
-                + KEY_CONTENT + " TEXT)"
-        );
-
-        // Create Saved Videos Table
+        // Create Saved News Table
         db.execSQL("CREATE TABLE " + TABLE_SAVED_NEWS + " ("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + KEY_IMG_URL + " TEXT, "
@@ -62,22 +47,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LIKED_NEWS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SAVED_NEWS);
         onCreate(db);
     }
 
-    // Insert into Liked Videos
-    public void insertLikedNews(String imgUrl, String source, String title, String timeAgo, String urlToWeb, String content) {
-        insertNews(TABLE_LIKED_NEWS, imgUrl, source, title, timeAgo, urlToWeb, content);
-    }
-
-    // Insert into Saved Videos
+    // Insert into Saved News
     public void insertSavedNews(String imgUrl, String source, String title, String timeAgo, String urlToWeb, String content) {
-        insertNews(TABLE_SAVED_NEWS, imgUrl, source, title, timeAgo, urlToWeb, content);
-    }
-
-    private void insertNews(String tableName, String imgUrl, String source, String title, String timeAgo, String urlToWeb, String content) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_IMG_URL, imgUrl);
@@ -86,40 +61,29 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(KEY_TIME_AGO, timeAgo);
         values.put(KEY_URL_TO_WEB, urlToWeb);
         values.put(KEY_CONTENT, content);
-        db.insert(tableName, null, values);
+        db.insert(TABLE_SAVED_NEWS, null, values);
         db.close();
     }
 
-    // Delete from Liked Videos
-    public void deleteLikedNews(String urlToWeb) {
-        deleteNews(TABLE_LIKED_NEWS, urlToWeb);
-    }
-
-    // Delete from Saved Videos
+    // Delete a specific Saved News by URL
     public void deleteSavedNews(String urlToWeb) {
-        deleteNews(TABLE_SAVED_NEWS, urlToWeb);
-    }
-
-    private void deleteNews(String tableName, String urlToWeb) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(tableName, KEY_URL_TO_WEB + " = ?", new String[]{urlToWeb});
+        db.delete(TABLE_SAVED_NEWS, KEY_URL_TO_WEB + " = ?", new String[]{urlToWeb});
         db.close();
     }
 
-    // Get all Liked Videos
-    public List<NewsModel.Articles> getLikedNews() {
-        return getNews(TABLE_LIKED_NEWS);
+    // Delete all Saved News
+    public void deleteAllSavedNews() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SAVED_NEWS, null, null);  // Delete all rows
+        db.close();
     }
 
-    // Get all Saved Videos
+    // Get all Saved News
     public List<NewsModel.Articles> getSavedNews() {
-        return getNews(TABLE_SAVED_NEWS);
-    }
-
-    private List<NewsModel.Articles> getNews(String tableName) {
         List<NewsModel.Articles> articlesList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + tableName, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SAVED_NEWS, null);
 
         try {
             if (cursor.moveToFirst()) {

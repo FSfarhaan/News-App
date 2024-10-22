@@ -11,7 +11,7 @@
     </string-array>
 
     <!-- Array for language options -->
-    <string-array name="language_array">\
+    <string-array name="language_array">
         <item>Select Language</item>
         <item>Arabic (ar)</item>
         <item>Chinese (zh)</item>
@@ -88,28 +88,6 @@
         <item>Venezuela (ve)</item>
     </string-array>
 
-    <!-- Array for Sources options -->
-    <string-array name="source_array">
-        <item>Select Source</item>
-        <item>the-times-of-india</item>
-        <item>hindustan-times</item>
-        <item>india-today</item>
-        <item>the-hindu</item>
-        <item>ndtv-news</item>
-        <item>the-indian-express</item>
-        <item>bbc-news</item>
-        <item>cnn</item>
-        <item>the-guardian</item>
-        <item>reuters</item>
-        <item>al-jazeera-english</item>
-        <item>forbes</item>
-        <item>time</item>
-        <item>huffpost</item>
-        <item>nbc-news</item>
-        <item>abc-news</item>
-        <!-- Add more sources as needed -->
-    </string-array>
-
     <string-array name="number_array">
         <item>Max Articles</item>
         <item>1</item>
@@ -133,4 +111,17 @@
         <item>19</item>
         <item>20</item>
     </string-array>
+
+    <string-array name="time_after_array">
+        <item>24 Hours</item>
+        <item>12 Hours</item>
+        <item>6 Hours</item>
+    </string-array>
+
+    <string-array name="sortBy_array">
+        <item>Oldest First</item>
+        <item>Newest First</item>
+    </string-array>
+
+
 </resources>

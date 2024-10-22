@@ -9,15 +9,11 @@
         android:icon="@drawable/search_icon"
         android:title="Search" />
     <item
-        android:id="@+id/menu_audio"
-        android:icon="@drawable/microphone"
-        android:title="Audio News" />
-    <item
         android:id="@+id/menu_subscription"
         android:icon="@drawable/watch_later_icon"
         android:title="Watch Later" />
     <item
         android:id="@+id/menu_personal"
-        android:icon="@drawable/profile_icon"
-        android:title="Private" />
+        android:icon="@drawable/setting_icon"
+        android:title="Settings" />
 </menu>

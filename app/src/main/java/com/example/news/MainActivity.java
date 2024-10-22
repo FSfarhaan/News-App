@@ -14,12 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.news.adapters.ViewPagerAdapter;
-import com.example.news.fragments.AudioFragment;
 import com.example.news.fragments.HomeFragment;
-import com.example.news.fragments.PersonalFragment;
+import com.example.news.fragments.SettingsFragment;
 import com.example.news.fragments.SearchFragment;
 import com.example.news.fragments.WatchLaterFragment;
-import com.example.news.utils.AlarmScheduler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,9 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     private HomeFragment homeFragment;
     private SearchFragment searchFragment;
-    private WatchLaterFragment favouritesFragment;
-    private PersonalFragment personalFragment;
-    private AudioFragment audioFragment;
+    private WatchLaterFragment WatchLaterFragment;
+    private SettingsFragment SettingsFragment;
 
     private View dimOverlay;
 
@@ -42,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().setStatusBarColor(getResources().getColor(R.color.white, this.getTheme()));
 
-        getAlarmPermission();
+        // getAlarmPermission();
 
         // Ensure the status bar icons are black if the background is light
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -56,9 +53,8 @@ public class MainActivity extends AppCompatActivity {
         // Initialize fragments
         homeFragment = new HomeFragment();
         searchFragment = new SearchFragment();
-        audioFragment = new AudioFragment();
-        favouritesFragment = new WatchLaterFragment();
-        personalFragment = new PersonalFragment();
+        WatchLaterFragment = new WatchLaterFragment();
+        SettingsFragment = new SettingsFragment();
 
         viewPager = findViewById(R.id.viewPager);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -77,14 +73,11 @@ public class MainActivity extends AppCompatActivity {
                     } else if (itemId == R.id.menu_search) {
                         viewPager.setCurrentItem(1);
                         return true;
-                    } else if (itemId == R.id.menu_audio) {
+                    } else if (itemId == R.id.menu_subscription) {
                         viewPager.setCurrentItem(2);
                         return true;
-                    } else if (itemId == R.id.menu_subscription) {
-                        viewPager.setCurrentItem(3);
-                        return true;
                     } else if (itemId == R.id.menu_personal) {
-                        viewPager.setCurrentItem(4);
+                        viewPager.setCurrentItem(3);
                         return true;
                     } else return false;
                 });
@@ -110,9 +103,8 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), ViewPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragment(homeFragment);
         adapter.addFragment(searchFragment);
-        adapter.addFragment(audioFragment);
-        adapter.addFragment(favouritesFragment);
-        adapter.addFragment(personalFragment);
+        adapter.addFragment(WatchLaterFragment);
+        adapter.addFragment(SettingsFragment);
         viewPager.setAdapter(adapter);
     }
 
@@ -130,20 +122,5 @@ public class MainActivity extends AppCompatActivity {
     public void hideOverlay() {
         dimOverlay.setVisibility(View.GONE);
         setStatusBarColor(getResources().getColor(R.color.white, this.getTheme())); // Set back to white
-    }
-
-    private void getAlarmPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            if (!alarmManager.canScheduleExactAlarms()) {
-                // Show a message or guide the user to the settings page
-                Toast.makeText(this, "Please grant exact alarm permission", Toast.LENGTH_LONG).show();
-
-                // Open the settings page for the app
-                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-                startActivity(intent);
-            }
-        }
-        // AlarmScheduler.scheduleRepeatingNotification(this, 1);
     }
 }

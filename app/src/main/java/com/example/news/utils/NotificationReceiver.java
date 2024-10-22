@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.news.MainActivity;
 import com.example.news.R;
+import com.example.news.data.SharedPreferencesHelper;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
@@ -24,28 +25,41 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // Create the notification channel
-        createNotificationChannel(context);
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(context);
 
-        // Create the notification intent (opens MainActivity when clicked)
-        Intent notificationIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        int notificationStatus = sharedPreferencesHelper.getNotificationStatus();
 
-        // Build the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.news_icon)
-                .setContentTitle("Daily News Update")
-                .setContentText("Check out the latest news!")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+        // Check if notifications are enabled
+        if (notificationStatus == 1) {
+            createNotificationChannel(context);
 
-        // Show the notification
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            String title = intent.getStringExtra("notification_title");
+            String message = intent.getStringExtra("notification_message");
+            if (title == null || title.isEmpty() || message == null || message.isEmpty()) {
+                title = "Daily News Update";
+                message = "Check out the latest news!";
+            }
+
+            // Create the notification intent (opens MainActivity when clicked)
+            Intent notificationIntent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+
+            // Build the notification
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.news_icon)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+
+            // Show the notification
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     private void createNotificationChannel(Context context) {

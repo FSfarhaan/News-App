@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/mainLL"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
@@ -160,10 +161,43 @@
                 </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/noNewsLL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="250sp"
+                    android:layout_height="250sp"
+                    android:src="@drawable/no_news_found"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No News Found"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:layout_marginTop="10sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxWidth="350sp"
+                    android:text="Try using other filter options"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="5sp"/>
+        </LinearLayout>
+
         <View
             android:id="@+id/dimOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#8B000000"
+            android:background="#00000000"
             android:visibility="gone" />
 </RelativeLayout>

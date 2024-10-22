@@ -53,7 +53,7 @@ public class SearchFragment extends Fragment implements NewsAdapter.OverlayVisib
     View dimOverlay;
     ShimmerFrameLayout shimmerSearch;
 
-    private LinearLayout filterLayout;
+    private LinearLayout filterLayout, searchNewsLL, noNewsLL;
     private Spinner languageSpinner, countrySpinner, numberSpinner;
     private Button fromDateButton, toDateButton;
     private String selectedFromDate, selectedToDate;
@@ -82,16 +82,24 @@ public class SearchFragment extends Fragment implements NewsAdapter.OverlayVisib
         countrySpinner = view.findViewById(R.id.countrySpinner);
         numberSpinner = view.findViewById(R.id.numberSpinner);
         shimmerSearch = view.findViewById(R.id.shimmerSearch);
+        searchNewsLL = view.findViewById(R.id.searchNewsLL);
+        noNewsLL = view.findViewById(R.id.noNewsLL);
 
         newsAdapter = new NewsAdapter(newsArrayList, getContext(), "Search", this);
         watchLaterRV.setLayoutManager(new LinearLayoutManager(getContext()));
         watchLaterRV.setAdapter(newsAdapter);
 
+        if (newsArrayList.isEmpty()) {
+            searchNewsLL.setVisibility(View.VISIBLE);
+        } else {
+            searchNewsLL.setVisibility(View.GONE);
+        }
+
         searchNews.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
-                    searchNewsByWords();
+                    if(!searchNews.getText().toString().trim().isEmpty()) searchNewsByWords();
                     return true;
                 }
                 return false;
@@ -171,9 +179,10 @@ public class SearchFragment extends Fragment implements NewsAdapter.OverlayVisib
     private void searchNewsByWords() {
         shimmerSearch.setVisibility(View.VISIBLE);
         shimmerSearch.startShimmer();
+        searchNewsLL.setVisibility(View.GONE);
 
         String keywords = searchNews.getText().toString();
-        String API_KEY = "fa4c9435b668467f3e57fc7936975be0";
+        String API_KEY = "5ee9f06f4f41ff9da51c2dd0e62d8077";
         String BASE_URL = "https://gnews.io/api/v4/";
 
         // Default values if not provided
@@ -203,14 +212,17 @@ public class SearchFragment extends Fragment implements NewsAdapter.OverlayVisib
                     if (!allArticles.isEmpty()) {
                         newsArrayList.clear();
                         newsArrayList.addAll(allArticles);
+                        noNewsLL.setVisibility(View.GONE);
                         newsAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(getContext(), "No articles found for the selected query.", Toast.LENGTH_SHORT).show();
+                        noNewsLL.setVisibility(View.VISIBLE);
                     }
                     showResults.setVisibility(View.VISIBLE);
                     showResults.setText(" Showing " + newsArrayList.size() + " articles related to:\n \"" + keywords + "\" ");
                 } else {
                     Toast.makeText(getContext(), "Sorry, can't fetch news.", Toast.LENGTH_SHORT).show();
+                    noNewsLL.setVisibility(View.VISIBLE);
                 }
                 shimmerSearch.stopShimmer();
                 shimmerSearch.setVisibility(View.GONE);
@@ -218,6 +230,7 @@ public class SearchFragment extends Fragment implements NewsAdapter.OverlayVisib
 
             @Override
             public void onFailure(Call<NewsModel> call, Throwable t) {
+                noNewsLL.setVisibility(View.VISIBLE);
                 Toast.makeText(getContext(), "Request failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

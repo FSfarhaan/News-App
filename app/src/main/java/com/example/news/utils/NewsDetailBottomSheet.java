@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +21,7 @@ import androidx.cardview.widget.CardView;
 import com.bumptech.glide.Glide;
 import com.example.news.R;
 import com.example.news.adapters.NewsAdapter;
+import com.example.news.data.DbHelper;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class NewsDetailBottomSheet extends BottomSheetDialogFragment {

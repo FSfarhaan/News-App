@@ -9,7 +9,9 @@ public interface NewsApi {
     Call<NewsModel> getNewsByCategory(
             @Query("apikey") String apiKey,
             @Query("topic") String category,
-            @Query("country") String country
+            @Query("country") String country,
+            @Query("lang") String language,
+            @Query("max") int max
     );
 
     @GET("top-headlines")
