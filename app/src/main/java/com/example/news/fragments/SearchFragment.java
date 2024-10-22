@@ -182,7 +182,7 @@ public class SearchFragment extends Fragment implements NewsAdapter.OverlayVisib
         searchNewsLL.setVisibility(View.GONE);
 
         String keywords = searchNews.getText().toString();
-        String API_KEY = "5ee9f06f4f41ff9da51c2dd0e62d8077";
+        String API_KEY = "YOUR_API_KEY";
         String BASE_URL = "https://gnews.io/api/v4/";
 
         // Default values if not provided
