@@ -1,10 +1,10 @@
 ---
 
-# 📰 News App
+# 📰 QuickNews: Stay updated with the Latest News!
 
 ## 📖 Description
 
-The **News App** is an Android application built with Java and XML that allows users to stay updated with the latest news across various categories. Users can browse news by category, search for news based on keywords, and save articles for later reading. The app fetches news data from the **gnews.io** API, offering a seamless and intuitive interface for keeping up with current events.
+The **QuickNews** is an Android application built with Java and XML that allows users to stay updated with the latest news across various categories. Users can browse news by category, search for news based on keywords, and save articles for later reading. The app fetches news data from the **gnews.io** API, offering a seamless and intuitive interface for keeping up with current events.
 
 ## ✨ Features
 
